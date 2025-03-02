@@ -19,7 +19,9 @@ from uuid import uuid4
 from django.conf import settings
 
 def homepage(request):
-    '''Logics for the main homepage of the web app.
+    '''
+    Logics for the main homepage of the web app.
+
     The 'works' variable stores the working process defined in Works model
     that is to be displayed in the homepage.
     '''
@@ -30,12 +32,16 @@ def homepage(request):
     return render(request,'pages/homepage.html',context)
 
 def about_page(request):
-    '''rendering the about page as it is'''
+    '''
+    rendering the about page as it is.
+    '''
     return render(request, 'pages/about.html')
 
 
 def category_all(request):
-    '''Displaying the categories in 'categories' page.
+    '''
+    Displaying the categories in 'categories' page.
+
     The cateogory names are defined dynamically thorough the django administrator.
     '''
     category = Category.objects.all()
@@ -45,7 +51,9 @@ def category_all(request):
     return render(request, 'category/categories.html', context)
 
 def category_individual(request,space):
-    '''Displaying the individual categories of each vehicle.
+    '''
+    Displaying the individual categories of each vehicle.
+
     The function takes 'space' as well in case an unnecessary character is encountered.
     Only the vehicles that have not been deleted are displayed.
     '''
@@ -59,7 +67,8 @@ def category_individual(request,space):
     return render(request, 'category/individual_category.html', context)
 
 def all_vehicles(request):
-    '''All the vehicles are diaplyed in 'all_vehicle' template.
+    '''
+    All the vehicles are diaplyed in 'all_vehicle' template.
     If the vehicles are not available right now, they are displayed separately.
     '''
     vehicles = Vehicles.objects.filter(isDelete=False, available = True)
@@ -71,7 +80,9 @@ def all_vehicles(request):
     return render(request, 'category/all_vehicles.html', context)
 
 def vehicle(request,id):
-    '''The vehicles are individually retrieved according to their pk/id.
+    '''
+    The vehicles are individually retrieved according to their pk/id.
+
     If there are reviews for the vehicle associated with the pk, they are also displayed.
     If the current user is customer, he can send reviews and rating via form using post request.
     '''
@@ -97,11 +108,16 @@ def vehicle(request,id):
     return render(request, 'pages/vehicle.html',context)
 
 def is_valid_queryparam(param):
-    '''checking if the input is null value'''
+    '''
+    checking if the input is null value.
+    '''
     return param != '' and param is not None
 
 def search_vehicle(request):
-    '''Searching vehicle along with filter'''
+    '''
+    Searching vehicle along with advance filter.
+    The filter options are 'searched', 'min_rate', 'max_rate' and 'category'.
+    '''
     qs = Vehicles.objects.filter(isDelete=False)
     searched = request.GET.get('searched')
     min_rate = request.GET.get('min_rate')
@@ -125,6 +141,10 @@ def search_vehicle(request):
 # customer only section
 @customer_only
 def customer_details(request):
+    """
+    It stores the details of users who are customers only.
+    All of the informations are shown in customer dashboard and can be edited dynamically.
+    """
     user_form = UserUpdateForm(instance=request.user)
     profile, created = Profile.objects.get_or_create(user=request.user)
     profile_form = ProfileUpdateForm(instance=profile)
@@ -147,6 +167,10 @@ def customer_details(request):
 
 @customer_only
 def renting(request):
+    """
+    This is for marking the vehicle as rented.
+    The information of the customer who rented the vehicle is shown as well.
+    """
     vehicle = Vehicles.objects.filter(isDelete=False, available = False, rented_by=request.user)
     context = {
         'profile': request.user.profile,
@@ -156,6 +180,10 @@ def renting(request):
 
 @customer_only
 def rent_page(request, id):
+    """
+    The id of the vehicle that the customer wants to rent is taken.
+    The customer is taken into a renting page where he/she is required to fill out necessary details.
+    """
     vehicle = Vehicles.objects.get(id=id)
     context = {
         "vehicle":vehicle,
@@ -168,7 +196,12 @@ def rent_page(request, id):
 
 # owner only section
 @owner_only
+
 def owner_details(request):
+    """
+    It stores the details of users who are owners only.
+    All of the informations are shown in owner dashboard and can be edited dynamically.
+    """
     user_form = UserUpdateForm(instance=request.user)
     profile, created = Profile.objects.get_or_create(user=request.user)
     profile_form = ProfileUpdateForm(instance=profile)
@@ -192,6 +225,9 @@ def owner_details(request):
 
 @owner_only
 def vehicle_register(request):
+    """
+    Allow vehicle owners to register new vehicles.
+    """
     if request.method == 'POST':
         form = VehicleForm(request.POST, request.FILES)
         if form.is_valid():
@@ -210,6 +246,9 @@ def vehicle_register(request):
 
 @owner_only
 def vehicle_update(request, id):
+    """
+    The owner can update the information of the vehicle that is registered.
+    """
     vehicle = Vehicles.objects.get(id=id)  # Retrieve the vehicle instance by primary key
 
     if request.method == 'POST':
@@ -225,6 +264,9 @@ def vehicle_update(request, id):
 
 @owner_only
 def vehicle_delete(request, id):
+    """
+    If the vehicle owner wants to delete the vehicle, they can do so.
+    """
     vehicle = Vehicles.objects.get(id=id)  # Retrieve the vehicle instance by primary key
     vehicle.isDelete=True
     vehicle.save()
@@ -233,7 +275,9 @@ def vehicle_delete(request, id):
 
 @owner_only
 def vehicle_on_rent(request):
-    ''' '''
+    ''' 
+    Only showing the vehicles that are not currently on rent.
+    '''
     rented_vehicles = Vehicles.objects.filter(uploaded_by=request.user, isDelete=False)
     context={
         'context':'suman',
@@ -245,6 +289,9 @@ def vehicle_on_rent(request):
 
 @owner_only
 def on_leash(request):
+    """
+    Separate display for the vehicles that are currently rented by someone.
+    """
     vehicle = Vehicles.objects.filter(isDelete=False, available = False, uploaded_by=request.user)
 
     context = {
@@ -256,6 +303,9 @@ def on_leash(request):
 
 @owner_only
 def returned_leash(request, id):
+    """
+    The owner can mark the vehicle as returned from their dashboard once it has been returned.
+    """
     if request.method == 'POST':
         vehicle = Vehicles.objects.get(id=id, available = False)
         vehicle.available = True
@@ -268,17 +318,27 @@ def returned_leash(request, id):
 # admin only section
 @admin_only
 def admin_home(request):
-     return render(request, 'pages/admin/admin_home.html')
+    """
+    A cool looking dashboard for admin panel.
+    (Haven't been designed yet.)
+    """
+    return render(request, 'pages/admin/admin_home.html')
 
 
 # admin only section ends
 
 # access denied section
 def auth_denied(request):
-     return render(request, 'pages/access/auth_denied.html')
+    """
+    Takes you to a separate page instead of showing error if you aren't authorised.
+    """
+    return render(request, 'pages/access/auth_denied.html')
 
 def customer_needed(request):
-     return render(request, 'pages/access/customer_needed.html')
+    """
+    Most of the features are targeted for users that have customer account so a separated page to request users to make customer account.
+    """ 
+    return render(request, 'pages/access/customer_needed.html')
 # access denied section ends
 
 # dashboard section ends
@@ -287,6 +347,11 @@ def customer_needed(request):
 
 # auth section start
 def register(request):
+    """
+    Create an account for the vehicle renting system.
+
+    A dropdown menu is available for choosing if you want to create vehicle owner account or customer account.
+    """
     msg = None
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -302,6 +367,12 @@ def register(request):
 
 
 def login_view(request):
+    """
+    Login page.
+
+    Use any of your login credentials (Customer or Owner).
+    Depending on your account type, you will be given different permissions and a slightly different dashboard.
+    """
     form = LoginForm(request.POST or None)
     msg = None
     if request.method == 'POST':
@@ -334,6 +405,11 @@ def login_view(request):
 
 @login_required(login_url='login_view')
 def change_password(request):
+    """
+    Change your password.
+
+    Only possible if you're logged in.
+    """
     cf = PasswordChangeForm(user=request.user)
     if request.method == 'POST':
         cf = PasswordChangeForm(user=request.user, data=request.POST)
@@ -343,6 +419,11 @@ def change_password(request):
     return render(request,'auth/change_password.html',{'cf':cf})
 
 def log_out(request):
+    """
+    Logout from the system.
+
+    You will be taken back to login page once you log out.
+    """
     logout(request)
     return redirect('login_view')
 
@@ -355,6 +436,14 @@ def log_out(request):
 # taking the data from user and directing it to khalti
 @csrf_exempt
 def initkhalti(request):
+    """
+    Initialize Khalti payment for vehicle rental.
+
+    A fixed amount has been given instead of dynamic amount as this is for testing pupose only.
+    Every other details are taken from the user and passed to khalti api according to the instruction in the khalti web checkout documentation.
+    If any error occurs in the API response, the error is shown as it is.
+    Otherwise, the user is directed to kahlti checkout page.
+    """
     if request.method == 'POST':
         url = "https://a.khalti.com/api/v2/epayment/initiate/"
         return_url = 'http://127.0.0.1:8000/verify/'
@@ -418,6 +507,12 @@ def initkhalti(request):
 
 @csrf_exempt
 def verifyKhalti(request):
+    """
+    Verify Khalti payment and update rental status.
+    
+    Once the payment is verified, user is taken back to the homepage.
+    If the payment is successful, the vehicle will be marked as unavailable and will be shown in the customer's dashboard.
+    """
     url = "https://a.khalti.com/api/v2/epayment/lookup/"
     if request.method == 'GET':
         headers = {

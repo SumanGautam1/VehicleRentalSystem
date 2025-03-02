@@ -1,3 +1,19 @@
+"""
+forms.py
+
+This module defines the forms used in the application. These forms handle user authentication, registration,
+profile updates, vehicle management, and reviews. Each form is designed to interact with the corresponding
+models and provide a user-friendly interface for data input.
+
+Classes:
+    LoginForm: Handles user login with username and password fields.
+    SignUpForm: Handles user registration with additional user type selection (Customer, Owner, Admin).
+    UserUpdateForm: Handles updating user email.
+    ProfileUpdateForm: Handles updating user profile details like full name, profile picture, and phone number.
+    VehicleForm: Handles adding or updating vehicle details.
+    ReviewForm: Handles submitting reviews for vehicles.
+"""
+
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Vehicles, Review, Profile
@@ -11,8 +27,16 @@ USER_TYPE_CHOICES = [
 
 
 class LoginForm(forms.Form):
+    """
+    Form for user login.
+
+    Attributes:
+        username (CharField): Input field for the username.
+        password (CharField): Input field for the password, rendered as a password input.
+    """
+
     username = forms.CharField(
-        widget= forms.TextInput(
+        widget=forms.TextInput(
             attrs={
                 "class": "form-control"
             }
@@ -28,6 +52,20 @@ class LoginForm(forms.Form):
 
 
 class SignUpForm(UserCreationForm):
+    """
+    Form for user registration.
+
+    Attributes:
+        username (CharField): Input field for the username.
+        password1 (CharField): Input field for the password, rendered as a password input.
+        password2 (CharField): Input field for confirming the password, rendered as a password input.
+        email (CharField): Input field for the email address.
+        user_type (TypedChoiceField): Dropdown field for selecting the user type (Customer, Owner, Admin).
+
+    Methods:
+        save: Overrides the save method to set user roles based on the selected user type.
+    """
+
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
@@ -70,15 +108,21 @@ class SignUpForm(UserCreationForm):
         )
     )
 
-
-
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
-    # using the values 1,2,3 to decide whether it's owner, customer or admin in dropdown
     def save(self, commit=True):
-        user = super().save(commit=False)   
+        """
+        Saves the user instance and sets the user role based on the selected user type.
+
+        Args:
+            commit (bool): If True, the user instance is saved to the database.
+
+        Returns:
+            User: The saved user instance.
+        """
+        user = super().save(commit=False)
         user_type = self.cleaned_data['user_type']
         if user_type == 2:
             user.is_admin = True
@@ -96,7 +140,15 @@ class SignUpForm(UserCreationForm):
             user.save()
         return user
 
+
 class UserUpdateForm(forms.ModelForm):
+    """
+    Form for updating user email.
+
+    Attributes:
+        email (EmailField): Input field for the email address.
+    """
+
     class Meta:
         model = User
         fields = ['email']
@@ -104,19 +156,39 @@ class UserUpdateForm(forms.ModelForm):
             'email': forms.EmailInput(attrs={'class': 'form-control custom-email-class'}),
         }
 
+
 class ProfileUpdateForm(forms.ModelForm):
+    """
+    Form for updating user profile details.
+
+    Attributes:
+        full_name (CharField): Input field for the user's full name.
+        profile_picture (FileField): Input field for uploading a profile picture.
+        phone_number (CharField): Input field for the user's phone number.
+    """
+
     class Meta:
         model = Profile
-        fields = ['full_name','profile_picture', 'phone_number']
+        fields = ['full_name', 'profile_picture', 'phone_number']
         widgets = {
             'full_name': forms.TextInput(attrs={'class': 'form-control custom-full-name-class'}),
             'profile_picture': forms.FileInput(attrs={'class': 'form-control custom-profile-picture-class'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control custom-phone-number-class'}),
-            
         }
 
 
 class VehicleForm(forms.ModelForm):
+    """
+    Form for adding or updating vehicle details.
+
+    Attributes:
+        vehicle_model (CharField): Input field for the vehicle model.
+        rent_price (IntegerField): Input field for the rental price.
+        category (ModelChoiceField): Dropdown field for selecting the vehicle category.
+        description (CharField): Input field for the vehicle description.
+        image (ImageField): Input field for uploading a vehicle image.
+    """
+
     class Meta:
         model = Vehicles
         fields = ['vehicle_model', 'rent_price', 'category', 'description', 'image']
@@ -126,6 +198,14 @@ class VehicleForm(forms.ModelForm):
 
 
 class ReviewForm(forms.ModelForm):
+    """
+    Form for submitting reviews for vehicles.
+
+    Attributes:
+        rating (ChoiceField): Dropdown field for selecting a rating (1 to 5).
+        comment (TextField): Input field for the review comment.
+    """
+
     class Meta:
         model = Review
         fields = ['rating', 'comment']
