@@ -18,27 +18,13 @@
         <div class="col-md-6">
             <form class="form" method="POST" action="/login/">
                 {% csrf_token %}
-        
                 <p class="title">LOGIN </p>
-        
-                <!-- <label>
-                    <input class="input" type="text" placeholder="" required="" name="username">
-                    <span>Username</span>
-                </label>
-                <label>
-                    <input class="input" type="password" placeholder="" required="" name="password">
-                    <span>Password</span>
-                </label> -->
-
                 {{form.as_p}}
                 <br>
                 <button class="submit">Submit</button>
                 <br>
                 <p class="signin">Don't have an acount? <a href="/register/">SignUp</a> </p>
                 <p class="signin">Forgot password? <a href="/password_reset/">Reset</a> </p>
-
-
- 
             </form>
         </div>
     </div>

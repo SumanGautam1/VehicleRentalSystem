@@ -8,10 +8,7 @@
 
 <div class="rent_now">
     <div class="container" style="margin-bottom: 70px;">
-        
         <h1 class="all_vehicles">{{category}}</h1>
-        
-        
         <div class="row">
             {% for vehicle in vehicles %}
             <div class="col-lg-4 col-sm-12 col-md-4">
@@ -20,7 +17,6 @@
                             <img src="{{ vehicle.image.url }}">
                     </div>
                     <h3 class="vehicle_model">{{vehicle.vehicle_model}}</h3>
-                    
                     <div class="details"><a href="{% url 'vehicle' vehicle.id  %}">Details</a></div>
                 </div>
             </div>

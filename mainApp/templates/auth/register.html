@@ -11,16 +11,13 @@
 {% endblock stylesheet %}
 
 {% block content %}  
-
 <div class="container login-register-container">
     <div class="row">
         <div class="col-md-5"></div>
         <div class="col-md-6">
                 <form class="form" method="POST" action="/register/">
                 {% csrf_token %}
-        
                 <p class="title">Register </p>
-
                 {{form.as_p}}
                 <button class="submit">Submit</button>
                 <p class="signin">Already have an acount ? <a href="/login/">SignIn</a> </p>
@@ -28,8 +25,6 @@
         </div>
     </div>
 </div>
-
-
 
 {% endblock content %}
 
