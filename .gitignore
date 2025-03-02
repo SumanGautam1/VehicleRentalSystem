@@ -1,0 +1,14 @@
+# Environment variables
+.env
+env/
+
+# Unecessary files
+__pycache__/
+*.pyc
+
+# Personal media folder
+media/profile_pictures/
+media/uploads/
+
+# Lite database
+db.sqlite3
