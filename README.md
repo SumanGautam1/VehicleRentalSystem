@@ -46,3 +46,12 @@ Get the ```MAIL_HOST_PASSWORD and EMAIL_HOST_USER``` from Google appication dash
     ```bash
     python manage.py runserver
 
+## UI Screenshots:
+### Home Page
+![Home Page](assets/homepage.png)
+
+### Login Page
+![Login Page](assets/loginpage.png)
+
+### Dashboard Page
+![Dashboard Page](assets/dashboard.png)
