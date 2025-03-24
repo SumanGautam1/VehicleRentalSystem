@@ -48,10 +48,10 @@ Get the ```MAIL_HOST_PASSWORD and EMAIL_HOST_USER``` from Google appication dash
 
 ## UI Screenshots:
 ### Home Page
-![Home Page](assets/homepage.png)
+![Home Page](assets/homepage.png?raw=true "Home Page")
 
 ### Login Page
-![Login Page](assets/loginpage.png)
+![Login Page](assets/loginpage.png?raw=true "Login Page")
 
 ### Dashboard Page
-![Dashboard Page](assets/dashboard.png)
+![Dashboard Page](assets/dashboard.png?raw=true "Dashboard Page")
