@@ -504,7 +504,6 @@ def initkhalti(request):
 
 
 # what to do after payment
-
 @csrf_exempt
 def verifyKhalti(request):
     """
