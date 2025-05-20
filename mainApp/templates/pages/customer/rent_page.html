@@ -54,10 +54,12 @@ Rent Vehicle
                 </select>
             </div>
     
-            <div class="mb-3">
-                <label for="exampleInputPassword1" class="form-label"><b>Amount</b></label>
-                <input class="form-control" type="text" id="rent_price" placeholder="RS {{ vehicle.rent_price }}" name="amount" disabled>
-            </div>
+           <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"><b>Amount</b></label>
+              <input class="form-control" type="number" id="rent_price" 
+                    placeholder="RS {{ vehicle.rent_price }}" 
+                    name="amount" readonly>
+          </div>
     
             <input type="hidden" name="vehicle_id" value="{{ vehicle.id }}">
             <input type="hidden" name="vehicle_name" value="{{ vehicle.vehicle_model }}">

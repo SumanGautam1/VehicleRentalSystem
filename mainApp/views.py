@@ -352,7 +352,6 @@ def register(request):
 
     A dropdown menu is available for choosing if you want to create vehicle owner account or customer account.
     """
-    msg = None
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -363,7 +362,7 @@ def register(request):
             messages.error(request, "Invalid Form!")
     else:
         form = SignUpForm()
-    return render(request,'auth/register.html', {'form': form, 'msg': msg})
+    return render(request,'auth/register.html', {'form': form})
 
 
 def login_view(request):
@@ -374,7 +373,6 @@ def login_view(request):
     Depending on your account type, you will be given different permissions and a slightly different dashboard.
     """
     form = LoginForm(request.POST or None)
-    msg = None
     if request.method == 'POST':
         if form.is_valid():
             username = form.cleaned_data.get('username')
@@ -401,7 +399,7 @@ def login_view(request):
                 return redirect('login_view')
         else:
             messages.error(request,"Try again!")
-    return render(request, 'auth/login.html', {'form': form, 'msg': msg})
+    return render(request, 'auth/login.html', {'form': form})
 
 @login_required(login_url='login_view')
 def change_password(request):
@@ -447,7 +445,7 @@ def initkhalti(request):
     if request.method == 'POST':
         url = "https://a.khalti.com/api/v2/epayment/initiate/"
         return_url = 'http://127.0.0.1:8000/verify/'
-        amount = 1000
+        amount = int(request.POST.get('amount')) * 1000
         transaction_id = str(uuid4())  # Generate a unique transaction ID
         purchase_order_name = request.POST.get('vehicle_name')
         username = request.POST.get('username')
@@ -462,7 +460,7 @@ def initkhalti(request):
         payload = json.dumps({
             "return_url": return_url,
             "website_url": return_url,
-            "amount": 1000,
+            "amount": amount,
             "purchase_order_id": purchase_order_id,
             "purchase_order_name": purchase_order_name,
             "transaction_id": transaction_id,

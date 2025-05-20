@@ -94,6 +94,25 @@
     color: #5896d1;
 }
 
+.responsive-card-height {
+  height: auto;
+  transition: height 0.3s ease-in-out;
+  border: 2px solid black !important;
+}
+
+@media (min-width: 992px) {
+  .responsive-card-height {
+    height: 50vh;
+  }
+  .responsive-card-height .row,
+  .responsive-card-height .row > [class*="col-"] {
+    height: 100%;
+  }
+}
+
+.card-text.justified {
+  text-align: justify; 
+}
 
 
 @media screen and (min-width: 768px) {
@@ -208,7 +227,6 @@ hr {
     border: 3px solid black;
     color: #000;
     background-color: #9DC1E3 !important;
-    transform: translateY(5px);
 }
 
 .card-img-wrapper {
@@ -453,15 +471,12 @@ hr {
 
 
 .active{
-    border: 3px solid #000 !important;
-    border-radius: 15%;
-    background-color: #9DC1E3;
-    color: #000 !important;
-    box-shadow: 0px 0px 20px #fff; 
+    border-bottom: 3px solid #f7e600 !important;
+    color: #f7e600 !important;
 }
 
 .nav-item a:hover{
-    transform: translateY(-5px);
+    /* transform: translateY(-5px); */
     color: #000 !important;
 }
 

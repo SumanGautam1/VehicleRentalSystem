@@ -41,8 +41,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mainApp'
+    
 ]
+
+EXTERNAL_APPS = [
+    'mainApp',
+    # for all auth login
+    'allauth', 
+    'allauth.account', 
+    'allauth.socialaccount', 
+    # only google and github login for now
+    'allauth.socialaccount.providers.github', 
+    'allauth.socialaccount.providers.google', 
+    ]
+
+INSTALLED_APPS += EXTERNAL_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -52,6 +65,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = 'rentalSystem.urls'
@@ -73,8 +87,38 @@ TEMPLATES = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [ 
+'django.contrib.auth.backends.ModelBackend', 
+'allauth.account.auth_backends.AuthenticationBackend', 
+]
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'github': {
+        'APP': {
+            'client_id': config('GITHUB_CLIENT_ID'),
+            'secret': config('GITHUB_SECRET'),
+            'key': ''
+        }
+    },
+    'google': {
+        'APP': {
+            'client_id': config('GOOGLE_CLIENT_ID'),
+            'secret': config('GOOGLE_SECRET'),
+            'key': ''
+        }
+    },
+}
+
 WSGI_APPLICATION = 'rentalSystem.wsgi.application'
 
+SOCIALACCOUNT_LOGIN_ON_GET = True
+ACCOUNT_LOGOUT_ON_GET = True
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+
+ 
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases

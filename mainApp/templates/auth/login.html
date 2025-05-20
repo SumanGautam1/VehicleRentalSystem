@@ -1,5 +1,6 @@
 
 {% extends "base.html" %}
+{% load socialaccount %}
 {% load static %}
 
 {% block title %}
@@ -20,6 +21,10 @@
                 {% csrf_token %}
                 <p class="title">LOGIN </p>
                 {{form.as_p}}
+                <hr>
+                <p class='text-center'>Or</p>
+                <div class="text-center ms-0"><a href="{% provider_login_url 'github' %}"><i class="fa-brands fa-github me-4 fs-5 text-light" aria-hidden="true"></i></a>
+                <a href="{% provider_login_url 'google' %}"><i class="fa-brands fa-google fs-5 text-light"></i></a></div>
                 <br>
                 <button class="submit">Submit</button>
                 <br>
